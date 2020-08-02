@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\qemu"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.list": "c",
+			"*.def": "c"
+		}
+	}
+}

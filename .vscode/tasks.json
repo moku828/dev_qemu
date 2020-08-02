@@ -1,0 +1,61 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "configure",
+            "type": "shell",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 ./configure --disable-bsd-user --disable-guest-agent --disable-strip --disable-werror --disable-gcrypt --enable-debug-info --disable-debug-tcg --disable-docs --disable-tcg-interpreter --enable-attr --disable-brlapi --disable-linux-aio --disable-bzip2 --disable-bluez --disable-cap-ng --disable-curl --disable-fdt --disable-glusterfs --disable-gnutls --disable-nettle --disable-gtk --disable-rdma --disable-libiscsi --disable-vnc-jpeg --disable-kvm --disable-lzo --disable-curses --disable-libnfs --disable-numa --disable-opengl --disable-vnc-png --disable-rbd --disable-vnc-sasl --disable-sdl --disable-seccomp --disable-smartcard --disable-snappy --disable-spice --disable-libssh2 --disable-libusb --disable-usb-redir --disable-vde --disable-vhost-net --disable-virglrenderer --disable-virtfs --enable-vnc --disable-vte --disable-xen --disable-xen-pci-passthrough --disable-xfsctl --disable-linux-user --enable-system --disable-blobs --disable-tools --target-list=sh4eb-softmmu --static --disable-pie",
+            "group": "build"
+        },
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 make -j8",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 make distclean",
+            "group": "build"
+        },
+        {
+            "label": "qtest",
+            "type": "shell",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 make V=1 check-qtest-sh4eb",
+            "group": "test"
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu -p 1201:1201 debian:buster sh4eb-softmmu/qemu-system-sh4eb -s -S -monitor telnet:0.0.0.0:1201,server,nowait",
+            "group": "test"
+        },
+        {
+            "label": "trace",
+            "type": "shell",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu python:3.8.5-buster scripts/simpletrace.py trace-events-all trace-1",
+            "group": "test"
+        },
+        {
+            "label": "gdbimg",
+            "type": "shell",
+            "command": "docker build -t moku828/gdb:8.2.1_ -f docker\\gdb\\Dockerfile docker\\gdb"
+        },
+        {
+            "label": "predbg",
+            "type": "shell",
+            "command": "docker run --privileged -d --name qemudgb -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/gdb:8.2.1"
+        },
+        {
+            "label": "pstdbg",
+            "type": "shell",
+            "command": "docker ps -a -f \"name=qemudgb\" -q | % { docker kill $_ }; docker ps -a -f \"name=qemudgb\" -q | % { docker rm $_ }"
+        }
+    ]
+}
