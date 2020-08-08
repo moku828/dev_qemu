@@ -6,7 +6,7 @@
         {
             "label": "configure",
             "type": "shell",
-            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 ./configure --disable-bsd-user --disable-guest-agent --disable-strip --disable-werror --disable-gcrypt --enable-debug-info --disable-debug-tcg --disable-docs --disable-tcg-interpreter --enable-attr --disable-brlapi --disable-linux-aio --disable-bzip2 --disable-cap-ng --disable-curl --disable-fdt --disable-glusterfs --disable-gnutls --disable-nettle --disable-gtk --disable-rdma --disable-libiscsi --disable-vnc-jpeg --disable-kvm --disable-lzo --disable-curses --disable-libnfs --disable-numa --disable-opengl --disable-vnc-png --disable-rbd --disable-vnc-sasl --disable-sdl --disable-seccomp --disable-smartcard --disable-snappy --disable-spice --disable-libusb --disable-usb-redir --disable-vde --disable-vhost-net --disable-virglrenderer --disable-virtfs --enable-vnc --disable-vte --disable-xen --disable-xen-pci-passthrough --disable-xfsctl --disable-linux-user --enable-system --disable-blobs --disable-tools --target-list=sh4eb-softmmu --static --disable-pie",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/gcc-sh-elf:7.4.0 ./configure --target-list=sh4eb-softmmu --enable-debug-tcg --cross-cc-sh4eb=sh-elf-gcc",
             "group": "build"
         },
         {
@@ -25,6 +25,12 @@
             "group": "build"
         },
         {
+            "label": "tcg",
+            "type": "shell",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/gcc-sh-elf:7.4.0 make check-tcg",
+            "group": "test"
+        },
+        {
             "label": "qtest",
             "type": "shell",
             "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 make V=1 check-qtest-sh4eb",
@@ -33,7 +39,7 @@
         {
             "label": "run",
             "type": "shell",
-            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu -p 1201:1201 debian:buster sh4eb-softmmu/qemu-system-sh4eb -s -S -monitor telnet:0.0.0.0:1201,server,nowait",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu -p 1201:1201 gcc:7.4.0 sh4eb-softmmu/qemu-system-sh4eb -s -S -monitor telnet:0.0.0.0:1201,server,nowait",
             "group": "test"
         },
         {
