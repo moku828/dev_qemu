@@ -6,13 +6,13 @@
         {
             "label": "configure",
             "type": "shell",
-            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/gcc-sh-elf:7.4.0 ./configure --target-list=sh4eb-softmmu --enable-debug-tcg --cross-cc-sh4eb=sh-elf-gcc",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/pexpect:4.8.0 ./configure --target-list=sh4eb-softmmu --enable-debug-tcg --cross-cc-sh4eb=sh-elf-gcc --static --disable-strip",
             "group": "build"
         },
         {
             "label": "make",
             "type": "shell",
-            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 make -j8",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/pexpect:4.8.0 make -j8",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -21,13 +21,13 @@
         {
             "label": "clean",
             "type": "shell",
-            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu gcc:7.4.0 make distclean",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/pexpect:4.8.0 make distclean",
             "group": "build"
         },
         {
             "label": "tcg",
             "type": "shell",
-            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/gcc-sh-elf:7.4.0 make check-tcg",
+            "command": "docker run --rm -it -v${workspaceFolder:qemu}:/qemu -w/qemu moku828/pexpect:4.8.0 make check-tcg",
             "group": "test"
         },
         {
